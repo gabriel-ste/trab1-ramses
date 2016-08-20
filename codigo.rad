@@ -1,0 +1,40 @@
+inicializa:
+	ldr x #0
+	str x bytes_comp
+	str x bytes_diff
+	str x bytes_ncomp
+	str x end_133
+
+testa_fim_str1:
+	LDR a i_string1, i
+testa_fim_str2:
+	LDR a i_string2, i
+	JZ fim
+
+	JZ conta_comparados
+	ADD x #1
+	JMP testa_fim_str1
+	
+conta_comparados:
+	ldr a bytes_comp
+	add #1
+	srt a bytes_comp
+	jmp testa_fim_str1
+
+conta_diferentes:
+	ldr a bytes_diff
+	add #1
+	str a bytes_diff
+	jmp testa_fim_str1
+
+
+fim:
+	HLT
+
+org 128
+	i_string1:	DB	0
+	i_string2:	DB 	0
+	bytes_comp:	DB	0
+	bytes_diff:	DB	0
+	bytes_ncomp:	DB	0
+	end_133:	DB	0
