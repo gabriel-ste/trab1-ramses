@@ -1,0 +1,21 @@
+Símbolo     Valor Decimal   Valor Hexadecimal
+-------     -------------   -----------------
+INICIALIZA              0                   0
+TESTA_FIM_STR1             18                  12
+TESTA_FIM_STR2             24                  18
+CONTA_COMPARADOS             38                  26
+CONTA_DIFERENTES             46                  2E
+INCREMENTA_INDICES             54                  36
+NOT_COMPARED_1             68                  44
+LACO_1                 70                  46
+NOT_COMPARED_2             84                  54
+LACO_2                 86                  56
+FIM                   100                  64
+N_I_STRING1            126                  7E
+N_I_STRING2            127                  7F
+I_STRING1             128                  80
+I_STRING2             129                  81
+BYTES_COMP            130                  82
+BYTES_DIFF            131                  83
+BYTES_NCOMP            132                  84
+END_133               133                  85

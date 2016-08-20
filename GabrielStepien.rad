@@ -1,0 +1,80 @@
+inicializa:
+	ldr a #0			; a=0
+	str a bytes_comp		;
+	str a bytes_diff
+	str a bytes_ncomp
+	str a end_133
+	ldr a i_string1
+	str a n_i_string1
+	ldr a i_string2
+	str a n_i_string2
+	
+testa_fim_str1:	
+	ldr x n_i_string1
+	LDR a 0,x
+	JZ not_compared_2		; desvia caso tenha acabado a primeira string
+	
+testa_fim_str2:
+	ldr x n_i_string2
+	LDR a 0,x
+	JZ not_compared_1  		; desvia caso tenha acabado a segunda string
+
+	SUB a n_i_string1,i
+	ADD a #255	
+	JC conta_diferentes
+	jmp conta_comparados
+
+conta_comparados:			
+	ldr a bytes_comp
+	add a #1
+	str a bytes_comp
+	jmp incrementa_indices
+
+conta_diferentes:
+	ldr a bytes_diff
+	add a #1
+	str a bytes_diff
+	jmp conta_comparados
+	
+incrementa_indices:
+	ldr a n_i_string1
+	add a #1
+	str a n_i_string1
+	ldr a n_i_string2
+	add a #1
+	str a n_i_string2
+	jmp testa_fim_str1
+
+not_compared_1:		; conta o número de bytes da string1 que não foram comparados
+	ldr x n_i_string1
+laco_1:	ldr a 0,x
+	jz fim
+	ldr a bytes_ncomp
+	add a #1
+	str a bytes_ncomp
+	add x #1
+	jmp laco_1
+
+not_compared_2:		; conta o número de bytes da string1 que não foram comparados
+	ldr x n_i_string2
+laco_2:	ldr a 0,x
+	jz fim
+	ldr a bytes_ncomp
+	add a #1
+	str a bytes_ncomp
+	add x #1
+	jmp laco_2
+
+
+fim:
+	HLT
+
+org 126
+	n_i_string1:	DB	0
+	n_i_string2:	DB 	0
+	i_string1:	DB	0
+	i_string2:	DB 	0
+	bytes_comp:	DB	0
+	bytes_diff:	DB	0
+	bytes_ncomp:	DB	0
+	end_133:	DB	0
