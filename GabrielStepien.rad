@@ -1,80 +1,81 @@
 inicializa:
-	ldr a #0			; a=0
-	str a bytes_comp		;
-	str a bytes_diff
-	str a bytes_ncomp
-	str a end_133
-	ldr a i_string1
-	str a n_i_string1
-	ldr a i_string2
-	str a n_i_string2
+	ldr a #0		; a=0
+	str a bytes_comp	; bytes_comp = 0
+	str a bytes_diff	; bytes_diff = 0
+	str a bytes_ncomp	; bytes_ncomp = 0
+	str a end_133		; end_133 = 0 
+	ldr a i_string1		; i_string1 = 0
+	str a n_i_string1	; n_i_string2 = 0
+	ldr a i_string2		; i_string2 = 0
+	str a n_i_string2   	; n_i_string2 = 0
 	
 testa_fim_str1:	
-	ldr x n_i_string1
-	LDR a 0,x
-	JZ not_compared_2		; desvia caso tenha acabado a primeira string
+	ldr x n_i_string1	; x = n_i_string1
+	LDR a 0,x		; a = a = mem(0+x)	
+	JZ not_compared_2	; desvia caso tenha acabado a primeira string para contar quantos bytes não foram comparados na segunda string
 	
 testa_fim_str2:
-	ldr x n_i_string2
-	LDR a 0,x
-	JZ not_compared_1  		; desvia caso tenha acabado a segunda string
+	ldr x n_i_string2	; x = n_i_string2
+	LDR a 0,x		; a = a = mem(0+x)	
+	JZ not_compared_1  	; desvia caso tenha acabado a segunda string para contar quantos bytes não foram comparados na primeira string
 
-	SUB a n_i_string1,i
-	ADD a #255	
-	JC conta_diferentes
-	jmp conta_comparados
+	SUB a n_i_string1,i 	; a-= *n_i_string1
+	ADD a #255		; a+= 255 (se não houver carry, os dois bytes comparados são iguais)
+	JC conta_diferentes	; se forem bytes diferentes, desvia para contar os bytes diferentes
+	jmp conta_comparados 	; se não, conta os bytes comparados
 
-conta_comparados:			
-	ldr a bytes_comp
-	add a #1
-	str a bytes_comp
-	jmp incrementa_indices
+conta_comparados:					
+	ldr a bytes_comp	; a= bytes_comp
+	add a #1		; a+=1
+	str a bytes_comp	; bytes_comp=a
+	jmp incrementa_indices 	; incrementa indices
 
 conta_diferentes:
-	ldr a bytes_diff
-	add a #1
-	str a bytes_diff
-	jmp conta_comparados
+	ldr a bytes_diff	; a= bytes_diff
+	add a #1		; a+=1
+	str a bytes_diff	; bytes_diff = a
+	jmp conta_comparados 	; desvia para contar os itens comparados 
 	
 incrementa_indices:
-	ldr a n_i_string1
-	add a #1
-	str a n_i_string1
-	ldr a n_i_string2
-	add a #1
-	str a n_i_string2
-	jmp testa_fim_str1
+	ldr a n_i_string1	; a=n_i_string1
+	add a #1			; a+=1 
+	str a n_i_string1	; n_i_string1=a
+	ldr a n_i_string2	; a=n_i_string2
+	add a #1		; a+=1
+	str a n_i_string2	; n_i_string2 = a
+	jmp testa_fim_str1	; desvia para testar o fim da string 1
+	
+not_compared_1:			; conta o número de bytes da string1 que não foram comparados
+	ldr x n_i_string1 	; x = n_i_string1
+laco_1:	
+	ldr a 0,x		; a = mem(0+x)		
+	jz fim			; se chegou no sinal de fim de string, pula para o fim
+	ldr a bytes_ncomp	; a = bytes_ncomp
+	add a #1		; a += 1
+	str a bytes_ncomp	; bytes_ncomp = a
+	add x #1		; x +=1
+	jmp laco_1		; desvia para o laco_1 para verificar o proximo byte da string 1
 
-not_compared_1:		; conta o número de bytes da string1 que não foram comparados
-	ldr x n_i_string1
-laco_1:	ldr a 0,x
-	jz fim
-	ldr a bytes_ncomp
-	add a #1
-	str a bytes_ncomp
-	add x #1
-	jmp laco_1
-
-not_compared_2:		; conta o número de bytes da string1 que não foram comparados
+not_compared_2:			; conta o número de bytes da string1 que não foram comparados
 	ldr x n_i_string2
-laco_2:	ldr a 0,x
-	jz fim
-	ldr a bytes_ncomp
-	add a #1
-	str a bytes_ncomp
-	add x #1
-	jmp laco_2
-
+laco_2:	
+	ldr a 0,x		; a = mem(0+x)	
+	jz fim			; se chegou no sinal de fim de string, pula para o fim 
+	ldr a bytes_ncomp	; a = bytes_ncomp
+	add a #1		; a += 1
+	str a bytes_ncomp	; bytes_ncomp = a
+	add x #1		; x +=1
+	jmp laco_2		; desvia para o laco_2 para verificar o proximo byte da string 2
 
 fim:
-	HLT
+	HLT			; fim!
 
 org 126
-	n_i_string1:	DB	0
-	n_i_string2:	DB 	0
-	i_string1:	DB	0
-	i_string2:	DB 	0
-	bytes_comp:	DB	0
-	bytes_diff:	DB	0
-	bytes_ncomp:	DB	0
-	end_133:	DB	0
+	n_i_string1:	DB	0	; endereço usado para armazenar e incrementar o início da primeira string
+	n_i_string2:	DB 	0	; endereço usado para armazenar e incrementar o início da segunda string
+	i_string1:	DB	0	; guarda o endereço do primeiro byte da primeira string
+	i_string2:	DB 	0	; guarda o endereço do primeiro byte da primeira string
+	bytes_comp:	DB	0	; retorna o número de bytes comparados
+	bytes_diff:	DB	0	; retorna o número de bytes diferentes
+	bytes_ncomp:	DB	0	; retorna o número de bytes não comparados
+	end_133:	DB	0   	; não foi utilizado pois não se trata da implementação mais segura
